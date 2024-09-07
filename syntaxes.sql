@@ -149,6 +149,24 @@ ALTER COLUMN SaleID INT NOT NULL;
 ALTER TABLE Sales
 ADD CONSTRAINT PK_Sales PRIMARY KEY (SaleID);
 
+-- Implementing PK constraint
+ALTER TABLE Sales
+ADD CONSTRAINT PK_SaleID PRIMARY KEY (SaleID);
+
+-- Syntax to find duplicate data
+SELECT SaleID, COUNT(*)
+FROM Sales
+GROUP BY SaleID
+HAVING COUNT(*) > 1;
+
+-- Removing Duplicate data to ensure data consistency
+WITH DuplicateRows AS (
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY SaleID ORDER BY SaleID) AS row_num
+    FROM Sales
+)
+DELETE FROM DuplicateRows
+WHERE row_num > 1;
+
 -- Views for Specific Use Cases
 -- Use Case 1: Sales Performance by Region
 CREATE VIEW SalesByRegion AS
