@@ -1,6 +1,6 @@
-## SalesAnalyticsELT
+# SalesAnalyticsELT
 
-# Project Overview
+## Project Overview
 The **SalesAnalyticsELT** project is designed to extract raw sales data from a flat file, load it into a staging area in SQL Server, and transform the data to fit into a normalized data model. The key stages of this ETL process include data extraction, transformation, and loading (ELT), and the project leverages SQL Server for data transformations and SSIS for data ingestion.
 
 ### Key Features
