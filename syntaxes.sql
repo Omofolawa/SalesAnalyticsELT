@@ -176,22 +176,58 @@ JOIN SalesReps sr ON s.SalesRepID = sr.SalesRepID
 JOIN Regions r ON sr.RegionID = r.RegionID
 GROUP BY r.RegionName;
 
+USE [SalesAnalyticsELT]
+GO
+
+/****** Object:  View [dbo].[SalesByRegion]    Script Date: 09/09/2024 18:28:19 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[SalesByRegion] AS
+SELECT r.RegionName, SUM(s.TotalAmount) AS TotalSales
+FROM Sale s
+JOIN SalesRep sr ON s.SalesRepID = sr.SalesRepID
+JOIN Region r ON sr.RegionID = r.RegionID
+GROUP BY r.RegionName;
+GO
 
 -- Use Case 2: Sales Performance by Sales Representative
 CREATE VIEW SalesByRep AS
-SELECT sr.SalesRepName, SUM(s.TotalAmount) AS TotalSales
-FROM Sales s
-JOIN SalesReps sr ON s.SalesRepID = sr.SalesRepID
-GROUP BY sr.SalesRepName;
+SELECT 
+    CONCAT(sr.First_Name, ' ', sr.Last_Name) AS SalesRepName,
+    SUM(s.TotalAmount) AS TotalSales
+FROM Sale s
+JOIN SalesRep sr ON s.SalesRepID = sr.SalesRepID
+GROUP BY sr.First_Name, sr.Last_Name;
 
 
 -- Use Case 3: Top-Selling Products
 CREATE VIEW TopSellingProducts AS
 SELECT p.ProductName, SUM(s.Quantity) AS TotalQuantity, SUM(s.TotalAmount) AS TotalSales
+FROM Sale s
+JOIN Product p ON s.ProductID = p.ProductID
+GROUP BY p.ProductName;
+
+USE [SalesAnalyticsELT]
+GO
+
+/****** Object:  View [dbo].[TopSellingProducts]    Script Date: 09/09/2024 18:49:28 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE OR ALTER VIEW [dbo].[TopSellingProducts] AS
+SELECT p.ProductName, SUM(s.Quantity) AS TotalQuantity, SUM(s.TotalAmount) AS TotalSales
 FROM Sales s
 JOIN Products p ON s.ProductID = p.ProductID
 GROUP BY p.ProductName;
---ORDER BY TotalSales DESC;
+GO
+
 
 
 
